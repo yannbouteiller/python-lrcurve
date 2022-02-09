@@ -25,7 +25,7 @@
       const storage = data.get(lineKey);
       if (storage.length > 0) {
         const [localMin, localMax] = d3.extent(storage.map(fn));
-        min = Math.min(min, localMin);
+        min = Math.max(min, localMin);
         max = Math.max(max, localMax);
       }
     }
