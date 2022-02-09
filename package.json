@@ -1,14 +1,12 @@
 {
-  "name": "lrcurve",
-  "version": "1.0.0",
-  "description": "Real-time learning curve for Jupiter notebooks",
+  "name": "portilooplot",
+  "version": "0.0.1",
+  "description": "Real-time curve for Jupiter notebooks",
   "main": "index.js",
   "private": true,
-  "directories": {
-    "example": "examples"
-  },
+  "directories": {},
   "scripts": {
-    "build": "browserify lrcurve/web_assets/d3.js | iconv -f UTF-8 -t ASCII//TRANSLIT//IGNORE > lrcurve/web_assets/d3.bundle.js",
+    "build": "browserify portilooplot/web_assets/d3.js | iconv -f UTF-8 -t ASCII//TRANSLIT//IGNORE > lrcurve/web_assets/d3.bundle.js",
     "publish": "rm -rf dist && python setup.py sdist && twine upload dist/*"
   },
   "repository": {
