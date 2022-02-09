@@ -29,14 +29,16 @@
       const storage = data.get(lineKey);
       if (storage.length > 0) {
         const [localMin, localMax] = d3.extent(storage.map(fn));
-        min = Math.max(min, localMin);
-        max = Math.max(max, localMax);
+        // min = Math.max(min, localMin);
+        // max = Math.max(max, localMax);
       }
     }
 
     return [
-      original[0] === null ? nonFiniteDefaultNull(min) : original[0],
-      original[1] === null ? nonFiniteDefaultNull(max) : original[1]
+      localMin,
+      localMax
+      // original[0] === null ? nonFiniteDefaultNull(min) : original[0],
+      // original[1] === null ? nonFiniteDefaultNull(max) : original[1]
     ];
   }
 
@@ -237,9 +239,9 @@
     setData(data) {
       // Compute x-axis limit
       if (this.dynamicXlim) {
-        const xlim = computeLimitX(this.xlim, data, this.lineKeys, (d) => d.x);
+        this.xlim = computeLimitX(this.xlim, data, this.lineKeys, (d) => d.x);
         if (xlim[0] !== this.xlim[0] || xlim[1] !== this.xlim[1]) {
-          this._updateXscale(xlim);
+          this._updateXscale(this.xlim);
         }
       }
 
