@@ -18,7 +18,7 @@
   }
 
   function computeLimit(original, data, lineKeys, fn) {
-    let min = Infinity;
+    let min = -Infinity;
     let max = -Infinity;
 
     for (const lineKey of lineKeys) {
