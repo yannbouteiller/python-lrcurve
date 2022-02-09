@@ -126,9 +126,11 @@ class PlotLearningCurve:
     def __init__(self,
                  display_fn=IPython.display.display,
                  debug=False,
+                 window_display_size=100,
                  **kwargs
     ):
         # Store settings
+        self.window_display_size = window_display_size
         self._debug = debug
         self._display = display_fn
         self._settings = {
@@ -241,6 +243,12 @@ class PlotLearningCurve:
         row = [x, y]
         self._data.append(row)
         self._backlog.append(row)
+
+        # remove last elements of the arrays to only show the desired window 
+        if len(self._data) > self.window_display_size:
+            self._data.pop(0)
+        if len(self._backlog) > self.window_display_size:
+            self._backlog.pop(0)
 
     def draw(self):
         """Updates the figure with the appended data.
