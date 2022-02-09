@@ -17,7 +17,7 @@
     return Number.isFinite(number) ? number : null;
   }
 
-  function computeLimit(original, data, lineKeys, fn) {
+  function computeLimitX(original, data, lineKeys, fn) {
     let min = -Infinity;
     let max = -Infinity;
 
@@ -26,6 +26,25 @@
       if (storage.length > 0) {
         const [localMin, localMax] = d3.extent(storage.map(fn));
         min = Math.max(min, localMin);
+        max = Math.max(max, localMax);
+      }
+    }
+
+    return [
+      original[0] === null ? nonFiniteDefaultNull(min) : original[0],
+      original[1] === null ? nonFiniteDefaultNull(max) : original[1]
+    ];
+  }
+
+  function computeLimitY(original, data, lineKeys, fn) {
+    let min = Infinity;
+    let max = -Infinity;
+
+    for (const lineKey of lineKeys) {
+      const storage = data.get(lineKey);
+      if (storage.length > 0) {
+        const [localMin, localMax] = d3.extent(storage.map(fn));
+        min = Math.min(min, localMin);
         max = Math.max(max, localMax);
       }
     }
@@ -214,7 +233,7 @@
     setData(data) {
       // Compute x-axis limit
       if (this.dynamicXlim) {
-        const xlim = computeLimit(this.xlim, data, this.lineKeys, (d) => d.x);
+        const xlim = computeLimitX(this.xlim, data, this.lineKeys, (d) => d.x);
         if (xlim[0] !== this.xlim[0] || xlim[1] !== this.xlim[1]) {
           this._updateXscale(xlim);
         }
@@ -222,7 +241,7 @@
 
       // Update y-axis limit
       if (this.dynamicYlim) {
-        const ylim = computeLimit(this.ylim, data, this.lineKeys, (d) => d.y);
+        const ylim = computeLimitY(this.ylim, data, this.lineKeys, (d) => d.y);
         if (ylim[0] !== this.ylim[0] || ylim[1] !== this.ylim[1]) {
           this._updateYscale(ylim);
         }
