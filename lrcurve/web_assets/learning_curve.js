@@ -21,6 +21,10 @@
     let min = -Infinity;
     let max = -Infinity;
 
+    console.log(original[0]);
+    console.log(original[1]);
+    console.log("-------");
+
     for (const lineKey of lineKeys) {
       const storage = data.get(lineKey);
       if (storage.length > 0) {
