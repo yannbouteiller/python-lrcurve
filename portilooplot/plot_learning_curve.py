@@ -167,7 +167,7 @@ class PlotLearningCurve:
         This is useful for when additional facets or lines have been discovered.
         """
         height = len(facet_config) * 200 + 90 if height is None else height
-        validate_settings(height, width, mappings, line_config, facet_config, xaxis_config)
+        # validate_settings(height, width, mappings, line_config, facet_config, xaxis_config)
 
         self._settings.update({
             'width': width,
