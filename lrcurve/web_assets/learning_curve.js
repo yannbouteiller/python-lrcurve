@@ -392,7 +392,7 @@
             y: y[key]
           })
           if (storage.length > this.max_window_len) {
-            storage.pop();
+            storage.shift();
           }
         }
       }
