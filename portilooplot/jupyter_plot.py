@@ -189,7 +189,7 @@ class ProgressPlot(PlotLearningCurve):
             for name, color in zip(self.line_names, self.line_colors)
         }
         facet_config = {
-            name: {"name": name, "limit": y_lim} for name, y_lim in zip(self._plots, self.y_lim)
+            name: {"name": name, "limit": y_lim, 'scale': 'log10'} for name, y_lim in zip(self._plots, self.y_lim)
         }
         xaxis_config = {"name": self.x_label, "limit": self.x_lim}
 
