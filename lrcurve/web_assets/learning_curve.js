@@ -193,7 +193,8 @@
     _updateXscale(xlim) {
       this.xScale.domain(xlim).nice(6);
       this.xTicks = this.xScale.ticks(6);
-      this.xTicksMod = highestMinorMod(this.xTicks.length, 19);
+      // this.xTicksMod = highestMinorMod(this.xTicks.length, 19);
+      this.xTicksMod = 1
       this.xTicksGrid = createGridTicks(this.xTicks, this.xTicksMod);
     }
 
