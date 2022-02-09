@@ -25,17 +25,12 @@
       const storage = data.get(lineKey);
       if (storage.length > 0) {
         [min, max] = d3.extent(storage.map(fn));
-        // const [localMin, localMax] = d3.extent(storage.map(fn));
-        // min = Math.max(min, localMin);
-        // max = Math.max(max, localMax);
       }
     }
 
     return [
       min,
       max
-      // original[0] === null ? nonFiniteDefaultNull(min) : original[0],
-      // original[1] === null ? nonFiniteDefaultNull(max) : original[1]
     ];
   }
 
@@ -191,7 +186,7 @@
     }
 
     _updateXscale(xlim) {
-      this.xScale.domain(xlim); // .nice(6);
+      this.xScale.domain(xlim);
       this.xTicks = this.xScale.ticks(6);
       this.xTicksMod = highestMinorMod(this.xTicks.length, 19);
       this.xTicksGrid = createGridTicks(this.xTicks, this.xTicksMod);
