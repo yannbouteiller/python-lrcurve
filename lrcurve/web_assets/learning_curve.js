@@ -21,22 +21,19 @@
     let min = -Infinity;
     let max = -Infinity;
 
-    console.log(original[0]);
-    console.log(original[1]);
-    console.log("-------");
-
     for (const lineKey of lineKeys) {
       const storage = data.get(lineKey);
       if (storage.length > 0) {
-        const [localMin, localMax] = d3.extent(storage.map(fn));
+        [min, max] = d3.extent(storage.map(fn));
+        // const [localMin, localMax] = d3.extent(storage.map(fn));
         // min = Math.max(min, localMin);
         // max = Math.max(max, localMax);
       }
     }
 
     return [
-      localMin,
-      localMax
+      min,
+      max
       // original[0] === null ? nonFiniteDefaultNull(min) : original[0],
       // original[1] === null ? nonFiniteDefaultNull(max) : original[1]
     ];
@@ -239,9 +236,9 @@
     setData(data) {
       // Compute x-axis limit
       if (this.dynamicXlim) {
-        this.xlim = computeLimitX(this.xlim, data, this.lineKeys, (d) => d.x);
+        const xlim = computeLimitX(this.xlim, data, this.lineKeys, (d) => d.x);
         if (xlim[0] !== this.xlim[0] || xlim[1] !== this.xlim[1]) {
-          this._updateXscale(this.xlim);
+          this._updateXscale(xlim);
         }
       }
 
