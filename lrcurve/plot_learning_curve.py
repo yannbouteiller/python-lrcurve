@@ -126,11 +126,9 @@ class PlotLearningCurve:
     def __init__(self,
                  display_fn=IPython.display.display,
                  debug=False,
-                 window_display_size=100,
                  **kwargs
     ):
         # Store settings
-        self.window_display_size = window_display_size
         self._debug = debug
         self._display = display_fn
         self._settings = {
@@ -150,6 +148,7 @@ class PlotLearningCurve:
     def reconfigure(self,
                     height = None,
                     width = 600,
+                    max_window_len = 100,
                     mappings = {
                         'loss': { 'line': 'train', 'facet': 'loss' },
                         'val_loss': { 'line': 'validation', 'facet': 'loss' }
@@ -176,7 +175,8 @@ class PlotLearningCurve:
             'mappings': mappings,
             'lineConfig': line_config,
             'facetConfig': facet_config,
-            'xAxisConfig': xaxis_config
+            'xAxisConfig': xaxis_config,
+            'max_window_len': max_window_len
         })
 
         disp = self._create_setup_javascript()
@@ -244,11 +244,11 @@ class PlotLearningCurve:
         self._data.append(row)
         self._backlog.append(row)
 
-        # remove last elements of the arrays to only show the desired window 
-        if len(self._data) > self.window_display_size:
-            self._data.pop(0)
-        if len(self._backlog) > self.window_display_size:
-            self._backlog.pop(0)
+        # # remove last elements of the arrays to only show the desired window 
+        # if len(self._data) > self.window_display_size:
+        #     self._data.pop(0)
+        # if len(self._backlog) > self.window_display_size:
+        #     self._backlog.pop(0)
 
     def draw(self):
         """Updates the figure with the appended data.

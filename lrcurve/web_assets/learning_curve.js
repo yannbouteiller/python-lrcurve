@@ -1,8 +1,8 @@
-;(function () {
+; (function () {
   'use strict';
   const d3 = window.d3;
 
-  const margin = {top: 10, right: 10, bottom: 10, left: 45};
+  const margin = { top: 10, right: 10, bottom: 10, left: 45 };
   const axisMargin = { top: 10, right: 15, bottom: 10, left: 15 };
   const facetWidth = 30;
   const legendHeight = 40;
@@ -74,7 +74,7 @@
       // Create graph container
       this.graph = this.container.append('g')
         .attr('transform',
-              'translate(' + margin.left + ',' + margin.top + ')');
+          'translate(' + margin.left + ',' + margin.top + ')');
 
       // Create facet
       this.facet = this.container.append('g')
@@ -118,16 +118,16 @@
         .tickValues(this.xTicksGrid)
         .tickSize(-this.graphHeight);
       this.xGridElement = this.graph.append("g")
-          .attr("class", "grid")
-          .attr("transform", `translate(${axisMargin.left},${this.graphHeight})`);
+        .attr("class", "grid")
+        .attr("transform", `translate(${axisMargin.left},${this.graphHeight})`);
 
       // create y-grid
       this.yGrid = d3.axisLeft(this.yScale)
         .tickValues(this.yTicksGrid)
         .tickSize(-this.graphWidth);
       this.yGridElement = this.graph.append("g")
-          .attr("class", "grid")
-          .attr('transform', `translate(0,${axisMargin.top})`);
+        .attr("class", "grid")
+        .attr('transform', `translate(0,${axisMargin.top})`);
 
       // define x-axis
       this.xAxis = d3.axisBottom(this.xScale)
@@ -155,15 +155,15 @@
       for (const lineKey of this.lineKeys) {
         // create drawer function
         const lineDrawer = d3.line()
-            .x((d) => self.xScale(d.x))
-            .y((d) => this.yScale(d.y));
+          .x((d) => self.xScale(d.x))
+          .y((d) => this.yScale(d.y));
         this.lineDrawers.set(lineKey, lineDrawer);
 
         // create line element
         const lineElement = this.graph.append('path')
-            .attr('class', 'line')
-            .attr('transform', `translate(${axisMargin.left},${axisMargin.top})`)
-            .attr('stroke', lineConfig[lineKey].color);
+          .attr('class', 'line')
+          .attr('transform', `translate(${axisMargin.left},${axisMargin.top})`)
+          .attr('stroke', lineConfig[lineKey].color);
         this.lineElements.set(lineKey, lineElement);
       }
     }
@@ -211,7 +211,7 @@
       );
     }
 
-    setData (data) {
+    setData(data) {
       // Compute x-axis limit
       if (this.dynamicXlim) {
         const xlim = computeLimit(this.xlim, data, this.lineKeys, (d) => d.x);
@@ -250,27 +250,27 @@
 
   class LearningCurvePlot {
     constructor({ id, height, width, mappings, facetConfig, lineConfig, xAxisConfig }) {
-      this.facetKeys = unique(Object.values(mappings).map(({line, facet}) => facet)).sort();
+      this.facetKeys = unique(Object.values(mappings).map(({ line, facet }) => facet)).sort();
 
       const innerHeight = height - legendHeight - xLabelHeight - xAxisHeight;
       const subGraphHeight = innerHeight / this.facetKeys.length;
 
       this._container = d3.select(document.getElementById(id))
-      .classed('learning-curve', true)
-      .style('height', `${height}px`)
-      .style('width', `${width}px`)
-      .attr('height', height)
-      .attr('width', width)
-      .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        .classed('learning-curve', true)
+        .style('height', `${height}px`)
+        .style('width', `${width}px`)
+        .attr('height', height)
+        .attr('width', width)
+        .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
       // Create a SubGraph for each facet
       this._facets = new Map();
       for (let facetIndex = 0; facetIndex < this.facetKeys.length; facetIndex++) {
         const facetKey = this.facetKeys[facetIndex];
         const lineKeys = unique(
-            Object.values(mappings)
-            .filter(({facet, line}) => facet === facetKey)
-            .map(({facet, line}) => line)
+          Object.values(mappings)
+            .filter(({ facet, line }) => facet === facetKey)
+            .map(({ facet, line }) => line)
         ).sort();
         this._facets.set(
           facetKey,
@@ -313,7 +313,7 @@
       this._legendOfsset = this._legend.append('g');
 
       let currentOffset = 0;
-      for (const {name, color} of Object.values(lineConfig)) {
+      for (const { name, color } of Object.values(lineConfig)) {
         // Draw rect with line inside [-]
         this._legendOfsset.append('rect')
           .attr('width', 25)
@@ -322,8 +322,8 @@
         this._legendOfsset.append('line')
           .attr('x1', currentOffset + 2)
           .attr('x2', currentOffset + 25 - 2)
-          .attr('y1', 25/2)
-          .attr('y2', 25/2)
+          .attr('y1', 25 / 2)
+          .attr('y2', 25 / 2)
           .attr('stroke', color);
         currentOffset += 30;
 
@@ -363,11 +363,12 @@
     constructor(settings) {
       this.index = new Map();
       this.data = new Map();
+      this.max_window_len = settings['max_window_len']
       this.updateSettings(settings);
     }
 
-    updateSettings (settings) {
-      for (const [key, {line, facet}] of Object.entries(settings.mappings)) {
+    updateSettings(settings) {
+      for (const [key, { line, facet }] of Object.entries(settings.mappings)) {
         if (this.data.has(key)) {
           continue;
         }
@@ -390,6 +391,9 @@
             x: x,
             y: y[key]
           })
+          if (storage.length > this.max_window_len) {
+            storage.pop();
+          }
         }
       }
     }
