@@ -178,7 +178,7 @@ class ProgressPlot(PlotLearningCurve):
                 "Can only update with int/float with one plot and one line."
             )
 
-        y_dict = {self._plots[0]: y} # {self.line_names[0]: y}}
+        y_dict = {self._plots[0]: {self.line_names[0]: y}}
         return y_dict
 
     def _setup_plot(self):
@@ -189,7 +189,7 @@ class ProgressPlot(PlotLearningCurve):
             for name, color in zip(self.line_names, self.line_colors)
         }
         facet_config = {
-            name: {"name": name, "limit": y_lim, 'scale': 'log10'} for name, y_lim in zip(self._plots, self.y_lim)
+            name: {"name": name, "limit": y_lim} for name, y_lim in zip(self._plots, self.y_lim)
         }
         xaxis_config = {"name": self.x_label, "limit": self.x_lim}
 
