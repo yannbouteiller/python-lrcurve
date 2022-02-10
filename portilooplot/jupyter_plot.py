@@ -70,6 +70,7 @@ class ProgressPlot(PlotLearningCurve):
         width=600,
         display_fn=IPython.display.display,
         debug=False,
+        max_window_len=100
     ):
 
         self.width = width
@@ -84,6 +85,7 @@ class ProgressPlot(PlotLearningCurve):
         self.y_lim = y_lim
         self.x_label = x_label
         self.iterator = 0
+        self.max_window_len = max_window_len
 
         if isinstance(y_lim[0], list):
             if len(y_lim)==len(plot_names):
@@ -201,4 +203,5 @@ class ProgressPlot(PlotLearningCurve):
             xaxis_config=xaxis_config,
             display_fn=self.display_fn,
             debug=self.debug,
+            max_window_len=self.max_window_len
         )
