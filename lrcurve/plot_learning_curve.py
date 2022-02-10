@@ -81,6 +81,7 @@ class PlotLearningCurve:
                  },
                  xaxis_config = { 'name': 'Epoch', 'limit': [0, None] },
                  display_fn=IPython.display.display,
+                 max_window_len=100,
                  debug=False
     ):
         height = len(facet_config) * 200 + 90 if height is None else height
@@ -122,7 +123,8 @@ class PlotLearningCurve:
             'height': height,
             'lineConfig': line_config,
             'facetConfig': facet_config,
-            'xAxisConfig': xaxis_config
+            'xAxisConfig': xaxis_config,
+            'max_window_len': max_window_len
         }
 
         # Prepear data containers

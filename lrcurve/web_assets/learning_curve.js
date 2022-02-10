@@ -1,15 +1,34 @@
-;(function () {
+; (function () {
   'use strict';
   const d3 = window.d3;
 
-  const margin = {top: 10, right: 10, bottom: 10, left: 35};
+  const margin = { top: 10, right: 10, bottom: 10, left: 35 };
   const axisMargin = { top: 10, right: 15, bottom: 10, left: 15 };
   const facetWidth = 30;
   const legendHeight = 40;
   const xAxisHeight = 30;
   const xLabelHeight = 20;
 
-  function computeLimit(original, data, lineKeys, fn) {
+  function computeLimitX(original, data, lineKeys, fn) {
+    let min = Infinity;
+    let max = -Infinity;
+
+    for (const lineKey of lineKeys) {
+      [min, max] = d3.extent(data.get(lineKey).map(fn));
+      // const [localMin, localMax] = d3.extent(data.get(lineKey).map(fn));
+      // min = Math.min(min, localMin);
+      // max = Math.max(max, localMax);
+    }
+
+    return [
+      min,
+      max
+      // original[0] === null ? min : original[0],
+      // original[1] === null ? max : original[1]
+    ];
+  }
+
+  function computeLimitY(original, data, lineKeys, fn) {
     let min = Infinity;
     let max = -Infinity;
 
@@ -63,7 +82,7 @@
       // Create graph container
       this.graph = this.container.append('g')
         .attr('transform',
-              'translate(' + margin.left + ',' + margin.top + ')');
+          'translate(' + margin.left + ',' + margin.top + ')');
 
       // Create facet
       this.facet = this.container.append('g')
@@ -107,16 +126,16 @@
         .tickValues(this.xTicksGrid)
         .tickSize(-this.graphHeight);
       this.xGridElement = this.graph.append("g")
-          .attr("class", "grid")
-          .attr("transform", `translate(${axisMargin.left},${this.graphHeight})`);
+        .attr("class", "grid")
+        .attr("transform", `translate(${axisMargin.left},${this.graphHeight})`);
 
       // create y-grid
       this.yGrid = d3.axisLeft(this.yScale)
         .tickValues(this.yTicksGrid)
         .tickSize(-this.graphWidth);
       this.yGridElement = this.graph.append("g")
-          .attr("class", "grid")
-          .attr('transform', `translate(0,${axisMargin.top})`);
+        .attr("class", "grid")
+        .attr('transform', `translate(0,${axisMargin.top})`);
 
       // define x-axis
       this.xAxis = d3.axisBottom(this.xScale)
@@ -144,21 +163,21 @@
       for (const lineKey of this.lineKeys) {
         // create drawer function
         const lineDrawer = d3.line()
-            .x((d) => self.xScale(d.x))
-            .y((d) => this.yScale(d.y));
+          .x((d) => self.xScale(d.x))
+          .y((d) => this.yScale(d.y));
         this.lineDrawers.set(lineKey, lineDrawer);
 
         // create line element
         const lineElement = this.graph.append('path')
-            .attr('class', 'line')
-            .attr('transform', `translate(${axisMargin.left},${axisMargin.top})`)
-            .attr('stroke', lineConfig[lineKey].color);
+          .attr('class', 'line')
+          .attr('transform', `translate(${axisMargin.left},${axisMargin.top})`)
+          .attr('stroke', lineConfig[lineKey].color);
         this.lineElements.set(lineKey, lineElement);
       }
     }
 
     _updateXscale(xlim) {
-      this.xScale.domain(xlim).nice(6);
+      this.xScale.domain(xlim); //.nice(6);
       this.xTicks = this.xScale.ticks(6);
       this.xTicksMod = highestMinorMod(this.xTicks.length, 19);
       this.xTicksGrid = createGridTicks(this.xTicks, this.xTicksMod);
@@ -200,10 +219,10 @@
       );
     }
 
-    setData (data) {
+    setData(data) {
       // Compute x-axis limit
       if (this.dynamicXlim) {
-        const xlim = computeLimit(this.xlim, data, this.lineKeys, (d) => d.x);
+        const xlim = computeLimitX(this.xlim, data, this.lineKeys, (d) => d.x);
         if (xlim[0] !== this.xlim[0] || xlim[1] !== this.xlim[1]) {
           this._updateXscale(xlim);
         }
@@ -211,7 +230,7 @@
 
       // Update y-axis limit
       if (this.dynamicYlim) {
-        const ylim = computeLimit(this.ylim, data, this.lineKeys, (d) => d.y);
+        const ylim = computeLimitY(this.ylim, data, this.lineKeys, (d) => d.y);
         if (ylim[0] !== this.ylim[0] || ylim[1] !== this.ylim[1]) {
           this._updateYscale(ylim);
         }
@@ -245,12 +264,12 @@
       const subGraphHeight = innerHeight / this.facetKeys.length;
 
       this._container = d3.select(container)
-      .classed('learning-curve', true)
-      .style('height', `${height}px`)
-      .style('width', `${width}px`)
-      .attr('height', height)
-      .attr('width', width)
-      .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        .classed('learning-curve', true)
+        .style('height', `${height}px`)
+        .style('width', `${width}px`)
+        .attr('height', height)
+        .attr('width', width)
+        .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
       // Create a SubGraph for each facet
       this._facets = new Map();
@@ -295,7 +314,7 @@
       this._legendOfsset = this._legend.append('g');
 
       let currentOffset = 0;
-      for (const {name, color} of Object.values(lineConfig)) {
+      for (const { name, color } of Object.values(lineConfig)) {
         // Draw rect with line inside [-]
         this._legendOfsset.append('rect')
           .attr('width', 25)
@@ -304,8 +323,8 @@
         this._legendOfsset.append('line')
           .attr('x1', currentOffset + 2)
           .attr('x2', currentOffset + 25 - 2)
-          .attr('y1', 25/2)
-          .attr('y2', 25/2)
+          .attr('y1', 25 / 2)
+          .attr('y2', 25 / 2)
           .attr('stroke', color);
         currentOffset += 30;
 
@@ -338,9 +357,10 @@
 
   // Class to accumulate and store all data
   class LearningCurveData {
-    constructor(facetLabels, lineLabels) {
+    constructor(facetLabels, lineLabels, max_window_len) {
       this.facetKeys = Object.keys(facetLabels);
       this.lineKeys = Object.keys(lineLabels);
+      this.max_window_len = max_window_len
 
       this.data = new Map();
       for (const facetKey of this.facetKeys) {
@@ -360,6 +380,9 @@
               x: row.x,
               y: row.y[facetKey][lineKey]
             });
+            if (storage.length > this.max_window_len) {
+              storage.shift();
+            }
           }
         }
       }
@@ -371,7 +394,7 @@
   }
 
   window.setupLearningCurve = function (settings) {
-    const data = new LearningCurveData(settings.facetConfig, settings.lineConfig);
+    const data = new LearningCurveData(settings.facetConfig, settings.lineConfig, settings.max_window_len);
     const graph = new LearningCurvePlot({
       container: document.getElementById(settings.id),
       ...settings
@@ -384,7 +407,7 @@
       graph.draw();
     }
 
-    window.appendLearningCurve = function(rows) {
+    window.appendLearningCurve = function (rows) {
       data.appendAll(rows);
 
       if (!waitingForDrawing) {
