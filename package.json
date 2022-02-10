@@ -1,6 +1,6 @@
 {
   "name": "portilooplot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Real-time curve for Jupiter notebooks",
   "main": "index.js",
   "private": true,
