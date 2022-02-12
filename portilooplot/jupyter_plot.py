@@ -110,6 +110,13 @@ class ProgressPlot(PlotLearningCurve):
 
         self._setup_plot()
 
+    def update_with_datapoints(self, datapoints):
+        for datapoint in datapoints:
+            datapoint = self._parse_y(datapoint)
+            self.append(self.iterator, datapoint)
+            self.iterator += 1
+        self.draw()
+
     def _update_with_iter(self, y):
         """
         Update plot with internal iterator.
